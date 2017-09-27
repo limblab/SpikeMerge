@@ -7,13 +7,8 @@
 % sure that you create different bdfs for each task (unless you know
 % what you're doing.)
 
-file_prefix_all = 'Han_20170206';
-file_path = 'C:\Users\rhc307\Projects\limblab\data-raeed\BumpCurl\Han\20170206\preCDS\merging\';
-% file_path = 'D:\Chewie_8I2\Chewie_2015-05-05_DCO_emg_emg_cartesian\CerebusData\';
-% file_prefix_all = 'Chewie_2015-05-05_DCO_emg_emg_cartesian_';
-% file_path = 'D:\Data\Mini_7H1\';
-% file_prefix_all = 'Mini_2013-11-22_UF_';
-% file_prefix_some = 'Kevin_2013-10-07_UF_001';
+file_prefix_all = 'Chips_20170913_COactpas_area2';
+file_path = 'C:\Users\rhc307\Projects\limblab\data-preproc\ForceKin\Chips\20170913\preCDS\merging\';
 
 % Run processSpikesForSorting for the first time to combine spike data from
 % all files with a name starting with file_prefix.
@@ -23,7 +18,7 @@ mergingStatus = processSpikesForSorting(file_path,file_prefix_all);
 while strcmp(mergingStatus,'merged spikes')
     % Now go to OfflineSorter and sort your spikes!
     disp(['Sort ''' file_prefix_all '-spikes.nev'' in OfflineSorter and save sorted file as '''...
-        file_prefix_all '-spikes-s.nev'' then press any key to continue.'])
+        file_prefix_all '-spikes-s.ynev'' then press any key to continue.'])
     pause
     % Run processSpiesForSorting again to separate sorted spikes into their
     % original files.
