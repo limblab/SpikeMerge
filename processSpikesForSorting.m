@@ -5,9 +5,9 @@ function status = processSpikesForSorting(file_path,file_prefix)
 %   Run this script again after spike sorting to separate into independent 
 %   .mat files.
 
-    if ~exist([file_path file_prefix '-spikes-metatags.mat'],'file')
+    if ~exist(fullfile(file_path,[file_prefix '-spikes-metatags.mat']),'file')
         % Merge spike data
-        NEVlist = dir([file_path file_prefix '*.nev']);
+        NEVlist = dir(fullfile(file_path,[file_prefix '*.nev']));
         NEVlist = NEVlist(cellfun('isempty',(regexp({NEVlist(:).name},'-s'))));
         disp(['Merging ' num2str(length(NEVlist)) ' files.'])
         NEVNSx_all = cerebus2NEVNSx(file_path,file_prefix,'noanalog');
@@ -23,7 +23,7 @@ function status = processSpikesForSorting(file_path,file_prefix)
         NEVNSx_all.NEV.Data.SerialDigitalIO.TimeStampSec=[];
         NEVNSx_all.NEV.Data.SerialDigitalIO.InsertionReason=[];
         NEVNSx_all.NEV.Data.SerialDigitalIO.UnparsedData=[];
-        save([file_path file_prefix '-digital'],'NEVdigital');
+        save(fullfile(file_path,[file_prefix '-digital']),'NEVdigital');
         
         % Save spikes only data
         disp('Saving merged NEV')
@@ -32,24 +32,24 @@ function status = processSpikesForSorting(file_path,file_prefix)
         % Save metatags for unmerging
         disp('Saving metatags')
         MetaTags = NEVNSx_all.MetaTags;
-        save([file_path file_prefix '-spikes-metatags'],'MetaTags')
+        save(fullfile(file_path,[file_prefix '-spikes-metatags']),'MetaTags')
         
         % done
         disp('Merged.')
         status = 'merged spikes';
     else
         % Un-merge
-        load([file_path file_prefix '-spikes-metatags'],'MetaTags')
-        if exist([file_path file_prefix '-spikes-s.nev'],'file')
-            NEV_sorted = openNEVLimblab('read',[file_path file_prefix '-spikes-s.nev']);
-            if exist([file_path file_prefix '-digital.mat'],'file')
+        load(fullfile(file_path,[file_prefix '-spikes-metatags']),'MetaTags')
+        if exist(fullfile(file_path,[file_prefix '-spikes-s.nev']),'file')
+            NEV_sorted = openNEVLimblab('read',fullfile(file_path,[file_prefix '-spikes-s.nev']));
+            if exist(fullfile(file_path,[file_prefix '-digital.mat']),'file')
                 disp('Re-integrating digital data.')
-                load([file_path file_prefix '-digital'],'NEVdigital')
+                load(fullfile(file_path,[file_prefix '-digital']),'NEVdigital')
                 NEV_sorted.Data.SerialDigitalIO.TimeStamp = NEVdigital.TimeStamp;
                 NEV_sorted.Data.SerialDigitalIO.TimeStampSec = NEVdigital.TimeStampSec;
                 NEV_sorted.Data.SerialDigitalIO.InsertionReason = NEVdigital.InsertionReason;
                 NEV_sorted.Data.SerialDigitalIO.UnparsedData = NEVdigital.UnparsedData;
-                delete([file_path file_prefix '-digital.mat'])
+                delete(fullfile(file_path,[file_prefix '-digital.mat']))
             end
             
             disp(['Separating ' num2str(length(MetaTags.NEVlist) ) ' files.'])
@@ -66,11 +66,11 @@ function status = processSpikesForSorting(file_path,file_prefix)
                 NEV_spikes_struct.Electrode =  NEV_spikes_struct.Electrode(first_idx:last_idx);
                 NEV_spikes_struct.Unit =  NEV_spikes_struct.Unit(first_idx:last_idx);
                 NEV_spikes_struct.Waveform =  NEV_spikes_struct.Waveform(:,first_idx:last_idx);
-                NEV = openNEVLimblab('read', [file_path MetaTags.NEVlist{iFile}],'nosave');
+                NEV = openNEVLimblab('read', fullfile(file_path,MetaTags.NEVlist{iFile}),'nosave');
                 NEV.Data.Spikes = NEV_spikes_struct;
-                save([file_path MetaTags.NEVlist{iFile}(1:end-4) '-s'],'NEV')
+                save(fullfile(file_path,MetaTags.NEVlist{iFile}(1:end-4)),'NEV')
             end
-            delete([file_path file_prefix '-spikes-metatags.mat'])
+            delete(fullfile(file_path,[file_prefix '-spikes-metatags.mat']))
             status = 'processed';
         else
             status = 'merged spikes';

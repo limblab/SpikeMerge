@@ -27,7 +27,7 @@ function saveNEVSpikesLimblab(NEV, filepath, newFileName)
 %   Version 1.0.0.1
 %
 
-fname = [filepath newFileName];
+fname = fullfile(filepath,newFileName);
 saveNEVver = '1.0.0.1';
 
 %% Validating the input arguments. Exit with error message if error occurs.
