@@ -1,4 +1,4 @@
-function saveNEVSpikesLimblab(NEV, filepath, newFileName)
+function saveNEVSpikesLimblab(NEV, file_path, newFileName)
 
 %%
 % Saves a .nev file from NEV data structure
@@ -27,7 +27,7 @@ function saveNEVSpikesLimblab(NEV, filepath, newFileName)
 %   Version 1.0.0.1
 %
 
-fname = fullfile(filepath,newFileName);
+fname = fullfile(file_path,newFileName);
 saveNEVver = '1.0.0.1';
 
 %% Validating the input arguments. Exit with error message if error occurs.
